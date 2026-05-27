@@ -1,0 +1,89 @@
+
+<style>
+* { box-sizing: border-box; }
+.wrap { padding: 12px 8px; }
+h3 { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 8px; padding-left: 4px; border-left: 3px solid #378ADD; }
+table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 14px; }
+th { background: #1A4A8A; color: #fff; padding: 6px 8px; text-align: left; font-weight: 500; }
+th:first-child { border-radius: 6px 0 0 0; }
+th:last-child { border-radius: 0 6px 0 0; }
+td { padding: 5px 8px; border-bottom: 1px solid var(--color-border-tertiary); color: var(--color-text-primary); vertical-align: top; }
+tr:nth-child(even) td { background: var(--color-background-secondary); }
+.badge { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 10px; font-weight: 500; }
+.b-in  { background: #e6f1fb; color: #185FA5; }
+.b-out { background: #e8f7ef; color: #0F6E56; }
+.b-sys { background: #f0eefe; color: #534AB7; }
+.b-fin { background: #fff3e0; color: #854F0B; }
+.b-sec { background: #fdecea; color: #993C1D; }
+.flow { display: flex; gap: 0; margin-bottom: 14px; flex-wrap: wrap; }
+.flow-step { flex: 1; min-width: 80px; background: var(--color-background-secondary); border: 1px solid var(--color-border-tertiary); padding: 6px 8px; text-align: center; font-size: 10px; color: var(--color-text-primary); position: relative; }
+.flow-step:not(:last-child)::after { content: '→'; position: absolute; right: -10px; top: 50%; transform: translateY(-50%); font-size: 12px; color: var(--color-text-secondary); z-index: 1; }
+.flow-step .num { font-size: 9px; color: var(--color-text-secondary); margin-bottom: 2px; }
+.flow-step .lbl { font-weight: 500; }
+.calc-box { background: var(--color-background-secondary); border: 1px solid var(--color-border-tertiary); border-radius: 8px; padding: 10px 12px; margin-bottom: 14px; font-size: 11px; }
+.calc-row { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid var(--color-border-tertiary); }
+.calc-row:last-child { border-bottom: none; font-weight: 500; color: #378ADD; }
+</style>
+
+<div class="wrap">
+
+<h3>Fluxo de Processamento</h3>
+<div class="flow">
+  <div class="flow-step"><div class="num">1</div><div class="lbl">Login</div></div>
+  <div class="flow-step"><div class="num">2</div><div class="lbl">GPS</div></div>
+  <div class="flow-step"><div class="num">3</div><div class="lbl">QR Code</div></div>
+  <div class="flow-step"><div class="num">4</div><div class="lbl">Liberar</div></div>
+  <div class="flow-step"><div class="num">5</div><div class="lbl">Corrida</div></div>
+  <div class="flow-step"><div class="num">6</div><div class="lbl">Encerrar</div></div>
+  <div class="flow-step"><div class="num">7</div><div class="lbl">Calcular</div></div>
+  <div class="flow-step"><div class="num">8</div><div class="lbl">Pagar</div></div>
+  <div class="flow-step"><div class="num">9</div><div class="lbl">Bloquear</div></div>
+</div>
+
+<h3>Dados de Entrada</h3>
+<table>
+  <tr><th>Campo</th><th>Tipo</th><th>Tela</th><th>Módulo</th><th>Validação</th></tr>
+  <tr><td>Nome completo</td><td>String</td><td>T3</td><td><span class="badge b-in">Cadastro</span></td><td>Mín. 3 caracteres</td></tr>
+  <tr><td>CPF ou Passaporte</td><td>String</td><td>T2, T3</td><td><span class="badge b-in">Cadastro / Login</span></td><td>Formato CPF 000.000.000-00</td></tr>
+  <tr><td>Foto do usuário</td><td>Image (JPEG/PNG)</td><td>T4</td><td><span class="badge b-in">Cadastro</span></td><td>Resolução mín. 200×200px</td></tr>
+  <tr><td>Endereço</td><td>String</td><td>T3</td><td><span class="badge b-in">Cadastro</span></td><td>Não vazio</td></tr>
+  <tr><td>País de origem</td><td>String (ISO 3166)</td><td>T3</td><td><span class="badge b-in">Cadastro</span></td><td>Lista predefinida</td></tr>
+  <tr><td>E-mail</td><td>String (e-mail)</td><td>T4, T15</td><td><span class="badge b-in">Cadastro / Senha</span></td><td>Formato RFC 5321</td></tr>
+  <tr><td>Telefone</td><td>String</td><td>T4</td><td><span class="badge b-in">Cadastro</span></td><td>DDD + número</td></tr>
+  <tr><td>Data de nascimento</td><td>Date (dd/mm/aaaa)</td><td>T3</td><td><span class="badge b-in">Cadastro</span></td><td>Maior de 18 anos</td></tr>
+  <tr><td>Senha</td><td>String (hash)</td><td>T2, T4</td><td><span class="badge b-sec">Segurança</span></td><td>Mín. 8 chars, 1 número</td></tr>
+  <tr><td>QR Code do patinete</td><td>String (Base64)</td><td>T7</td><td><span class="badge b-sys">Locação</span></td><td>Câmera ativa + GPS OK</td></tr>
+  <tr><td>Localização GPS</td><td>GeoPoint (lat/lon)</td><td>T6, T7</td><td><span class="badge b-sys">Locação</span></td><td>Precisão ≤ 10 m</td></tr>
+  <tr><td>Número do cartão</td><td>String (tokenizado)</td><td>T5, T11</td><td><span class="badge b-fin">Financeiro</span></td><td>Luhn algorithm</td></tr>
+  <tr><td>Validade / CVV</td><td>String</td><td>T5</td><td><span class="badge b-fin">Financeiro</span></td><td>Data futura</td></tr>
+  <tr><td>Valor de recarga</td><td>Decimal (R$)</td><td>T14</td><td><span class="badge b-fin">Financeiro</span></td><td>Mín. R$ 5,00</td></tr>
+  <tr><td>Forma de pagamento</td><td>Enum (cartão/PIX/crédito)</td><td>T11</td><td><span class="badge b-fin">Financeiro</span></td><td>Opção selecionada</td></tr>
+</table>
+
+<h3>Dados de Saída</h3>
+<table>
+  <tr><th>Dado</th><th>Tipo</th><th>Tela</th><th>Módulo</th><th>Descrição</th></tr>
+  <tr><td>Token de sessão</td><td>JWT (String)</td><td>T2 → T6</td><td><span class="badge b-sec">Segurança</span></td><td>Armazenado localmente, expira em 24h</td></tr>
+  <tr><td>Confirmação de cadastro</td><td>Boolean + e-mail</td><td>T5 → T2</td><td><span class="badge b-in">Cadastro</span></td><td>E-mail de boas-vindas enviado</td></tr>
+  <tr><td>Liberação do patinete</td><td>Comando criptografado</td><td>T8 → hardware</td><td><span class="badge b-sys">Sistema</span></td><td>Protocolo proprietário RaSTrO</td></tr>
+  <tr><td>Cronômetro de corrida</td><td>Integer (segundos)</td><td>T9</td><td><span class="badge b-sys">Locação</span></td><td>Atualizado a cada segundo</td></tr>
+  <tr><td>Valor acumulado</td><td>Decimal (R$)</td><td>T9, T10</td><td><span class="badge b-fin">Financeiro</span></td><td>Taxa + (min × tarifa)</td></tr>
+  <tr><td>Resumo da corrida</td><td>Object (JSON)</td><td>T10</td><td><span class="badge b-sys">Locação</span></td><td>Duração, valor, patinete, data</td></tr>
+  <tr><td>Confirmação de pagamento</td><td>Boolean + recibo</td><td>T12</td><td><span class="badge b-fin">Financeiro</span></td><td>Recibo por e-mail + notificação push</td></tr>
+  <tr><td>Bloqueio do patinete</td><td>Comando criptografado</td><td>T12 → hardware</td><td><span class="badge b-sys">Sistema</span></td><td>Enviado após pagamento</td></tr>
+  <tr><td>Histórico de corridas</td><td>List&lt;Locacao&gt;</td><td>T13</td><td><span class="badge b-sys">Locação</span></td><td>Ordenado por data decrescente</td></tr>
+  <tr><td>Saldo da carteira</td><td>Decimal (R$)</td><td>T14</td><td><span class="badge b-fin">Financeiro</span></td><td>Atualizado em tempo real</td></tr>
+  <tr><td>Alerta de débito</td><td>Boolean + valor</td><td>T14, T6</td><td><span class="badge b-sec">Segurança</span></td><td>Bloqueia novas locações</td></tr>
+  <tr><td>Link de redefinição de senha</td><td>URL tokenizada</td><td>T15 → e-mail</td><td><span class="badge b-sec">Segurança</span></td><td>Válido por 30 minutos</td></tr>
+</table>
+
+<h3>Exemplo de Cálculo de Tarifa</h3>
+<div class="calc-box">
+  <div class="calc-row"><span>Taxa inicial</span><span>R$ 3,00</span></div>
+  <div class="calc-row"><span>Tempo de uso</span><span>20 minutos</span></div>
+  <div class="calc-row"><span>Tarifa por minuto</span><span>R$ 0,50</span></div>
+  <div class="calc-row"><span>Subtotal tempo (20 × R$0,50)</span><span>R$ 10,00</span></div>
+  <div class="calc-row"><span>Valor Total = R$3,00 + R$10,00</span><span>R$ 13,00</span></div>
+</div>
+
+</div>
